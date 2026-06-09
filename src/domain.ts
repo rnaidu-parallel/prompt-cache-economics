@@ -373,10 +373,16 @@ export const SESSION_STATE: SessionState = {
   location: 'Causeway Marsh, three reed-spans east of the keep',
 };
 
-/** Build the session-stable dynamic suffix string. Same bytes every turn within a session. */
+/**
+ * Build the session-stable dynamic suffix. Byte-stable within a run (so it caches on turns 2+),
+ * but carries a per-run session id (from RUN_SEED) so each run is a fresh SESSION that starts
+ * cold — giving a clean, consistent cold→warm cache arc every run instead of accidentally
+ * reading a prior run's warm prefix. (A real session has its own story-so-far, so this is honest.)
+ */
 export function buildDynamicSuffix(s: SessionState): string {
   const party = s.party.map((m) => `- ${m.name} (${m.role}) — ${m.hp} HP`).join('\n');
-  return `## The story so far (this session)\n\n${s.previousSummary}\n\n## Party state\n\n${party}\n\nCurrent location: ${s.location}`;
+  const sessionOpened = new Date(RUN_SEED || 0).toISOString();
+  return `## The story so far (this session)\n\nSession opened ${sessionOpened}.\n${s.previousSummary}\n\n## Party state\n\n${party}\n\nCurrent location: ${s.location}`;
 }
 
 /**
@@ -392,10 +398,22 @@ export const PLAYER_TURNS: string[] = [
   "After the fight, I search the reeds where it nested. Anything worth carrying back to Greygull to sell?",
 ];
 
-/** A varying in-world timestamp per turn — the footgun ingredient. */
+/**
+ * Run seed — set once per run to a real wall-clock ms. It makes the per-turn timestamp unique
+ * across runs, so the `naive` variant (timestamp in the prefix) is an honest COLD cache every
+ * run instead of accidentally re-reading an identical prefix warmed by a prior run. The
+ * `disciplined` variant is unaffected: its timestamp lives in the uncached user-message tail.
+ */
+let RUN_SEED = 0;
+export function setRunSeed(ms: number): void {
+  RUN_SEED = ms;
+}
+
+/** A real, changing datetime per turn — the footgun ingredient ("a timestamp in your prompt"). */
 export function turnContext(turnIndex: number): string {
   const tides = ['low water, rising', 'mid-tide, rising', 'high water', 'mid-tide, falling', 'low water', 'low water, rising'];
-  const hour = 6 + turnIndex * 2;
+  const base = (RUN_SEED || 0) + turnIndex * 3_600_000; // advance an hour per turn
+  const stamp = new Date(base).toISOString().slice(0, 16).replace('T', ' ');
   const tide = tides[turnIndex % tides.length];
-  return `<context><time>day 3, ${String(hour).padStart(2, '0')}:00 — ${tide}</time></context>`;
+  return `<context><time>${stamp} UTC — ${tide}</time></context>`;
 }

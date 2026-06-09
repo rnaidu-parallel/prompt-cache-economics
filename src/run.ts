@@ -10,7 +10,7 @@ import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { PRICING, MODELS, PRICING_PINNED_DATE, turnCost, type Rate } from './pricing.js';
-import { PLAYER_TURNS } from './domain.js';
+import { PLAYER_TURNS, setRunSeed } from './domain.js';
 import type { TurnResult } from './providers/types.js';
 import { runSession } from './providers/openrouter.js';
 
@@ -81,6 +81,7 @@ async function main() {
     console.log('OPENROUTER_API_KEY not set — add it to .env. Aborting.');
     process.exit(1);
   }
+  setRunSeed(Date.now()); // run-unique timestamps so `naive` is an honest cold cache each run
 
   const report: any = { runAt: new Date().toISOString(), via: 'openrouter', turns: TURNS, pricingPinned: PRICING_PINNED_DATE, models: MODELS, providers: {} };
 

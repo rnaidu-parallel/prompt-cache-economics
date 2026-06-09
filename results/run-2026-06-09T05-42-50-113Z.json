@@ -1,0 +1,406 @@
+{
+  "runAt": "2026-06-09T05:42:50.113Z",
+  "via": "openrouter",
+  "turns": 6,
+  "pricingPinned": "2026-06-09",
+  "models": {
+    "openai": "openai/gpt-5.4",
+    "anthropic": "anthropic/claude-sonnet-4.6"
+  },
+  "providers": {
+    "openai": {
+      "model": "openai/gpt-5.4",
+      "baselineInputCost": 0.083615,
+      "naive": {
+        "uncached": 33446,
+        "cachedRead": 0,
+        "cacheWrite": 0,
+        "output": 1028,
+        "promptTokens": 33446,
+        "inputCost": 0.083615,
+        "baselineInputCost": 0.083615,
+        "reportedCost": 0.099035,
+        "reasoningTokens": 0,
+        "vsBaseline": 0
+      },
+      "disciplined": {
+        "uncached": 2829,
+        "cachedRead": 30720,
+        "cacheWrite": 0,
+        "output": 926,
+        "promptTokens": 33549,
+        "inputCost": 0.014752500000000002,
+        "baselineInputCost": 0.08387249999999999,
+        "reportedCost": 0.0286425,
+        "reasoningTokens": 0,
+        "vsBaseline": -0.8235663457513603,
+        "hitRate": 0.9156755790038451
+      },
+      "turns": {
+        "naive": [
+          {
+            "turnIndex": 0,
+            "playerAction": "We push open the keep door and head for the harbormaster. I want to ask Quill what bounties are on the board.",
+            "reply": "The keep door grinds inward on wet hinges. Inside, the air smells of lamp oil, mildew, and boiled fish. Quill stands where she always stands, one hand on the open ledger, her one good eye already on you before the door finishes moving.\n\n“Board’s there,” she says, jerking her chin at the wall beside her desk. “Same as this morning, plus one. Reed-stalker in the Causeway Marsh, forty in salvage writ when you bring back the gland. Drowned hands in a cellar below Tower Sere, twenty and whatever coin’s still in the mud. And Borin’s lot posted a private notice for hands willing to go near the Weir. No sum written. Which means either not enough money or too much trouble.”\n\nQuill wets a thumb, turns a page in the ledger, and looks back up. “You asking because you want work, or because you’ve come back with something?” What do you do?",
+            "usage": {
+              "uncachedInput": 5069,
+              "cachedRead": 0,
+              "cacheWrite": 0,
+              "outputTokens": 200
+            },
+            "reportedCost": 0.0156725,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 1,
+            "playerAction": "Borin checks the tide board while I haggle. What's the next low water, and what's the marsh crossing look like?",
+            "reply": "Borin glances up at the slate by the inner arch, runs a thumb over the chalk, and grunts. “Next low water’s in about a bell and a half. Tide’s still rising now. Marsh causeway’ll be bad going till it turns — shin-deep in the cuts, deeper where the stones have dropped. You can cross clean inside the window if you leave on time. Miss it, and you’ll be wading blind with the reeds.”\n\nQuill does not look at the board. She already knows what it says. “If you’re taking marsh work, take light. Fog’s thick out there and the stalkers like the dim. If you’re not taking marsh work, don’t waste my floor with haggling practice.”\n\nHer eye stays on you; Borin stays by the board, reading the chalk twice like he wishes it would improve. What do you say?",
+            "usage": {
+              "uncachedInput": 5301,
+              "cachedRead": 0,
+              "cacheWrite": 0,
+              "outputTokens": 187
+            },
+            "reportedCost": 0.0160575,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 2,
+            "playerAction": "We take the reed-stalker bounty. I light a lantern and lead the party onto the causeway, watching the fog.",
+            "reply": "Quill scratches a mark beside the notice in her ledger. “Taken,” she says. “Forty when I see the gland. Not a story about the gland.” She watches you lift the lantern, then adds, “Keep it high when the reeds go quiet. If they don’t like what they see, that’s your warning.”\n\nYou step out into the wet grey and take the causeway east. The stones are slick, half-drowned where the tide still fingers across them, and the fog lies low over the marsh in long white bands. Your lantern throws a weak gold circle over black water and reed heads. Somewhere off to your left, something knocks once against stone under the surface, then goes still.\n\nThree reed-spans out, the marsh changes. The wind drops. Even the gulls shut up. Ahead, the fog hangs thicker over a break in the reeds where the causeway bends out of sight. What do you do?",
+            "usage": {
+              "uncachedInput": 5516,
+              "cachedRead": 0,
+              "cacheWrite": 0,
+              "outputTokens": 195
+            },
+            "reportedCost": 0.016715,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 3,
+            "playerAction": "Something's moving in the reeds to our left. I hold up a fist to stop the party and roll perception.",
+            "reply": "Roll 1d20 and add your Perception.",
+            "usage": {
+              "uncachedInput": 5743,
+              "cachedRead": 0,
+              "cacheWrite": 0,
+              "outputTokens": 15
+            },
+            "reportedCost": 0.0145825,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 4,
+            "playerAction": "I throw the lantern toward the sound to drive it back, then draw my blade. Borin, get behind me.",
+            "reply": "The lantern leaves your hand in a hard gold arc and splashes down in the reeds to the left, glass clattering against stone before it settles half-cocked in the mud. Light blooms sideways through the fog. The reeds there shiver, then bend sharply away from it. Whatever was in them does not come on.\n\nBorin obeys without comment, boots scraping wet stone as he shifts back of your shoulder. Ket has already gone low, one hand on the hilt at his hip, eyes on the bend ahead. In the lantern’s thrown light you catch only pieces — pale length between stalks, too long for a man, too smooth for driftwood — and then it is gone deeper into the reeds. The marsh stays wrong-quiet.\n\nYour blade is out. The lantern burns off to the left, away from your hand now, and the fog ahead at the bend is still thick enough to hide a second shape if there is one. Do you press forward, fall back to the lantern, or try to flush it from the reeds?",
+            "usage": {
+              "uncachedInput": 5785,
+              "cachedRead": 0,
+              "cacheWrite": 0,
+              "outputTokens": 216
+            },
+            "reportedCost": 0.0177025,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 5,
+            "playerAction": "After the fight, I search the reeds where it nested. Anything worth carrying back to Greygull to sell?",
+            "reply": "The reeds are mashed flat in a bowl around a low hummock of mud and old bone. It smells of brackish rot and fish oil. In among gull skulls, cracked crab shell, and a strip of rotted sailcloth, you find what matters: the stalker’s gland, pale and rubbery, still intact if you cut it clean. Quill will pay for that.\n\nBuried a little deeper, under woven reeds black with slime, your hand closes on something smooth and hard. A pearl the size of a thumbnail, cold-lit from within — brinelight, steady as a watchfire and worth carrying. There’s also a fistful of drowned coin green with salt, collector’s stuff, not real money but saleable in Greygull if you can be bothered with the weight.\n\nThe marsh around you is still. Your thrown lantern burns low where it lies in the mud, and the tide is rising. Do you take what you’ve found and head back, or keep working the nest before the water comes up?",
+            "usage": {
+              "uncachedInput": 6032,
+              "cachedRead": 0,
+              "cacheWrite": 0,
+              "outputTokens": 215
+            },
+            "reportedCost": 0.018305,
+            "reasoningTokens": 0
+          }
+        ],
+        "disciplined": [
+          {
+            "turnIndex": 0,
+            "playerAction": "We push open the keep door and head for the harbormaster. I want to ask Quill what bounties are on the board.",
+            "reply": "The keep takes you in with the smell of wet rope, lamp oil, and old stone. Quill stands where she always stands, one hand on her open ledger, the board at her shoulder chalked over and crossed through in a dozen hard hands. Her one good eye lifts to you.\n\n“Board’s there. Read it or I can do it for you. Reed-stalker gland still stands at forty in salvage writ. Drowned hands cleared from a cellar at Tower Sere, twelve and first pick of anything not nailed down. One missing diver overdue from a Tidewarden line near the Foundry approach — twenty if he’s breathing, ten if he’s not and you bring back the tag. Tide turns quick today. That’s the shape of it.”\n\nShe wets a thumb, turns a page in the ledger, and looks at you over the rim. “Which of those are you here for?”",
+            "usage": {
+              "uncachedInput": 581,
+              "cachedRead": 4480,
+              "cacheWrite": 0,
+              "outputTokens": 186
+            },
+            "reportedCost": 0.0053625,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 1,
+            "playerAction": "Borin checks the tide board while I haggle. What's the next low water, and what's the marsh crossing look like?",
+            "reply": "Quill does not look up from the ledger. “Next low water’s the eighth bell. You’ve missed the easy window for the marsh. Crossing now means wet thighs in the best stretches, deeper in the cuts, and worse if the wind turns before you’re halfway. Causeway stones will still show in places, but not enough to trust your feet to habit.”\n\nBehind you, Borin studies the chalk board, jaw set. “She’s right. You can make parts of it at mid-tide, but not quickly, and not with much margin. If you’re going east, better to have a reason.”\n\nQuill taps the board once with a blunt fingernail. “So. Do you wait for the water to turn, take a harbor job, or go into the marsh knowing what the marsh will do back?”",
+            "usage": {
+              "uncachedInput": 440,
+              "cachedRead": 4864,
+              "cacheWrite": 0,
+              "outputTokens": 172
+            },
+            "reportedCost": 0.004896,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 2,
+            "playerAction": "We take the reed-stalker bounty. I light a lantern and lead the party onto the causeway, watching the fog.",
+            "reply": "Quill’s eye hardens a fraction. “That bounty was for a marsh hunt, not a suicide note.” She glances once at the black water beyond the gate. “At high water the causeway’s gone under in the cuts. Lantern’ll show you where you’re about to die, and what’s about to see you.”\n\nOutside, the fog lies low and thick over the drowned stones. Your lantern throws a weak gold bowl across the tide, enough to catch reeds nodding where no wind touches them and slick water moving over the hidden path. Somewhere out in the white, something knocks once against stone. Borin shifts his grip on his pole and says, too quietly, “If we go now, we go slow.”\n\nThe gate stands open behind you. The marsh waits ahead, black and breathing around the drowned causeway. What do you do?",
+            "usage": {
+              "uncachedInput": 538,
+              "cachedRead": 4992,
+              "cacheWrite": 0,
+              "outputTokens": 178
+            },
+            "reportedCost": 0.005263,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 3,
+            "playerAction": "Something's moving in the reeds to our left. I hold up a fist to stop the party and roll perception.",
+            "reply": "Roll 1d20 and add your Perception.",
+            "usage": {
+              "uncachedInput": 515,
+              "cachedRead": 5248,
+              "cacheWrite": 0,
+              "outputTokens": 15
+            },
+            "reportedCost": 0.0028245,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 4,
+            "playerAction": "I throw the lantern toward the sound to drive it back, then draw my blade. Borin, get behind me.",
+            "reply": "The lantern leaves your hand in a slow gold arc and strikes the mud with a wet hiss, glass miraculously holding. Light blooms low across the reeds. For a beat the marsh goes wrong-still.\n\nThen the reeds to your left fold inward and something pale and long recoils from the light just beyond its edge, water shivering around it. Not gone. Just holding off. Borin steps back on your word, boots scraping stone, while Ket turns half-sideways with a knife low and ready. The causeway ahead is showing again as the tide falls, slick black humps through the water, but the thing in the reeds has your flank and knows where you are now.\n\nThe lantern burns in the mud between you and it. The fog shifts. Do you press forward, fall back, or try to draw it into the light?",
+            "usage": {
+              "uncachedInput": 327,
+              "cachedRead": 5504,
+              "cacheWrite": 0,
+              "outputTokens": 175
+            },
+            "reportedCost": 0.0048185,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 5,
+            "playerAction": "After the fight, I search the reeds where it nested. Anything worth carrying back to Greygull to sell?",
+            "reply": "The reeds are mashed flat in a dark oval around the kill, rank with marsh-water and the sour animal stink of it. Beneath the broken stalks you find the nest built up from reed, driftbone, and strips of old sailcloth dragged in from somewhere farther east. There is something worth carrying: a brinelight pearl, mud-slick but still glowing cold blue under the thatch, and a little scatter of drowned coin green with salt.\n\nBorin crouches, pokes the nest with the butt of his knife, and grunts. “Pearl’s clean money in Greygull. Coins too, if you can stand haggling with collectors over muck.” Ket is already scanning the fog instead of the nest. “Take it fast. This much noise carries.”\n\nThe pearl fits in a palm and sheds a steady dead light over your wet hands. The marsh is quiet again, which is not the same thing as safe. What do you do?",
+            "usage": {
+              "uncachedInput": 428,
+              "cachedRead": 5632,
+              "cacheWrite": 0,
+              "outputTokens": 200
+            },
+            "reportedCost": 0.005478,
+            "reasoningTokens": 0
+          }
+        ]
+      }
+    },
+    "anthropic": {
+      "model": "anthropic/claude-sonnet-4.6",
+      "baselineInputCost": 0.11940300000000001,
+      "naive": {
+        "uncached": 515,
+        "cachedRead": 0,
+        "cacheWrite": 39286,
+        "output": 467,
+        "promptTokens": 39801,
+        "inputCost": 0.1488675,
+        "baselineInputCost": 0.11940300000000001,
+        "reportedCost": 0.1558725,
+        "reasoningTokens": 0,
+        "vsBaseline": 0.24676515665435544
+      },
+      "disciplined": {
+        "uncached": 681,
+        "cachedRead": 33796,
+        "cacheWrite": 7330,
+        "output": 857,
+        "promptTokens": 41807,
+        "inputCost": 0.0396693,
+        "baselineInputCost": 0.125421,
+        "reportedCost": 0.052524299999999996,
+        "reasoningTokens": 0,
+        "vsBaseline": -0.6677696540287934,
+        "hitRate": 0.808381371540651
+      },
+      "turns": {
+        "naive": [
+          {
+            "turnIndex": 0,
+            "playerAction": "We push open the keep door and head for the harbormaster. I want to ask Quill what bounties are on the board.",
+            "reply": "The salt-warped door gives with a familiar groan. Inside, the keep's common room smells of lamp oil and low tide. Quill is behind her counter, ledger open, not looking up.\n\n\"Low water's in two bells,\" she says, before you've crossed the room. \"Board's on the wall. Read it yourself — I'm not your herald.\"",
+            "usage": {
+              "uncachedInput": 352,
+              "cachedRead": 0,
+              "cacheWrite": 5971,
+              "writeTtl": "5m",
+              "outputTokens": 90
+            },
+            "reportedCost": 0.02479725,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 1,
+            "playerAction": "Borin checks the tide board while I haggle. What's the next low water, and what's the marsh crossing look like?",
+            "reply": "Quill still hasn't looked up. \"Haggle implies you have something I want.\"\n\nBorin crosses to the board, squints at the chalk marks. \"Next low water's marked at the fourth bell,\" he says, flat. \"Two bells from now, give or take. Causeway's passable for two bells either side — so you've got a window. After that the eastern reed-spans go under first.\" He taps the chalk. \"We missed yesterday's window sitting in Greygull.\"\n\nHe doesn't say it like an accusation. He says it like a man who is tired of saying things like that.\n\nThe board also shows the bounties Quill won't read to you. Three entries in chalk, the harbormaster's cramped hand. What do you do — read the board, or press Quill first?",
+            "usage": {
+              "uncachedInput": 34,
+              "cachedRead": 0,
+              "cacheWrite": 6405,
+              "writeTtl": "5m",
+              "outputTokens": 187
+            },
+            "reportedCost": 0.02692575,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 2,
+            "playerAction": "We take the reed-stalker bounty. I light a lantern and lead the party onto the causeway, watching the fog.",
+            "reply": "The causeway stone is slick under your boots, the fog sitting low and grey over the marsh. The reeds crowd both sides within arm's reach. Your lantern throws a yellow circle maybe four paces wide — enough to see the path, not enough to see what's in the reeds.",
+            "usage": {
+              "uncachedInput": 34,
+              "cachedRead": 0,
+              "cacheWrite": 6620,
+              "writeTtl": "5m",
+              "outputTokens": 71
+            },
+            "reportedCost": 0.025992,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 3,
+            "playerAction": "Something's moving in the reeds to our left. I hold up a fist to stop the party and roll perception.",
+            "reply": "Roll 1d20 and add your Perception.",
+            "usage": {
+              "uncachedInput": 31,
+              "cachedRead": 0,
+              "cacheWrite": 6719,
+              "writeTtl": "5m",
+              "outputTokens": 15
+            },
+            "reportedCost": 0.02551425,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 4,
+            "playerAction": "I throw the lantern toward the sound to drive it back, then draw my blade. Borin, get behind me.",
+            "reply": "Before I can tell you what the sound is, the lantern's already in the air.",
+            "usage": {
+              "uncachedInput": 32,
+              "cachedRead": 0,
+              "cacheWrite": 6759,
+              "writeTtl": "5m",
+              "outputTokens": 28
+            },
+            "reportedCost": 0.02586225,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 5,
+            "playerAction": "After the fight, I search the reeds where it nested. Anything worth carrying back to Greygull to sell?",
+            "reply": "You haven't fought anything yet. The lantern arcs into the reeds and hits the water with a hiss — and the fog goes wrong-quiet in a way that means something heard it land.\n\nBut you haven't rolled Perception, and you haven't seen what's there.\n\nRoll 1d20 and add your Perception.",
+            "usage": {
+              "uncachedInput": 32,
+              "cachedRead": 0,
+              "cacheWrite": 6812,
+              "writeTtl": "5m",
+              "outputTokens": 76
+            },
+            "reportedCost": 0.026781,
+            "reasoningTokens": 0
+          }
+        ],
+        "disciplined": [
+          {
+            "turnIndex": 0,
+            "playerAction": "We push open the keep door and head for the harbormaster. I want to ask Quill what bounties are on the board.",
+            "reply": "The keep smells of salt and lamp-smoke. Quill is behind her counter before you've crossed the threshold, ledger open, one eye on the door and one — the missing one — on nothing in particular.\n\n\"Causeway's passable now. Less so in two bells.\" She turns the ledger without looking at it. \"Board's got three live contracts. Reed-stalker in the east marsh — forty writ, bring the gland. Drowned hands in the first two floors of Tower Sere, someone's been counting them and losing count — twenty writ a confirmed dozen, Tidewarden certification required. Third one's fresher.\" She taps the board with a finger, not an invitation, just a fact. \"Wrecker crew out of Greygull, Black Gull affiliate, went quiet on the Foundry approach two nights ago. Roon Ledger is offering sixty to know what happened to them. He says know, not recover. Notice the difference.\"\n\nShe closes the ledger a half-inch. Not all the way.\n\n\"Reed-stalker's simplest work. The Tower Sere job wants paper. Ledger's job wants something nobody's named yet.\" She looks at you — one good eye, the weight of both. \"Which one are you here for?\"",
+            "usage": {
+              "uncachedInput": 380,
+              "cachedRead": 0,
+              "cacheWrite": 5936,
+              "writeTtl": "5m",
+              "outputTokens": 289
+            },
+            "reportedCost": 0.027735,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 1,
+            "playerAction": "Borin checks the tide board while I haggle. What's the next low water, and what's the marsh crossing look like?",
+            "reply": "Borin shoulders past to the board — a slate mounted beside the door, chalked and re-chalked so many times the marks blur into each other. He runs a finger down it, lips moving.\n\n\"Next low water's the sixth bell.\" He doesn't look up. \"That's — \" a pause, counting \" — seven hours out. We've missed this window. Causeway's rising now, be impassable inside the hour.\" He turns, arms crossed, engineer's face: not alarm, just arithmetic. \"We cross now, we're racing it. We wait for sixth bell, we cross dry but we're starting the hunt in the dark.\"\n\nQuill hasn't moved. \"He's right on both counts. I'd also note,\" she says, in the tone of someone who notes things and does not repeat them, \"that the reed-stalker took its last confirmed sighting at the east reed-line, which is twenty minutes past the causeway on a good day. Factor accordingly.\"\n\nShe's still waiting on your answer about the contract.",
+            "usage": {
+              "uncachedInput": 63,
+              "cachedRead": 5936,
+              "cacheWrite": 666,
+              "writeTtl": "5m",
+              "outputTokens": 229
+            },
+            "reportedCost": 0.0079023,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 2,
+            "playerAction": "We take the reed-stalker bounty. I light a lantern and lead the party onto the causeway, watching the fog.",
+            "reply": "Quill slides a contract chit across the counter without ceremony. \"Gland, not the whole carcass. Forty writ on return.\" She doesn't wish you luck.\n\nOutside, the causeway is already wrong. Water laps the near stones — not flooding yet, but present, patient, an inch over the lowest flags. The fog is thick enough to muffle sound. Your lantern throws a yellow circle maybe ten feet wide; beyond that, grey nothing.\n\nBorin falls in behind you and says nothing, which from him is loud. Ket moves to the left edge of the path, watching the reeds, one hand free.\n\nYou are three steps out when the reeds go quiet.\n\nNot wind-quiet. Wrong-quiet — the small birds and the marsh-skippers that scratch and cheep at the water's edge have simply stopped. The fog sits on the water like a lid.",
+            "usage": {
+              "uncachedInput": 60,
+              "cachedRead": 6602,
+              "cacheWrite": 289,
+              "writeTtl": "5m",
+              "outputTokens": 205
+            },
+            "reportedCost": 0.00631935,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 3,
+            "playerAction": "Something's moving in the reeds to our left. I hold up a fist to stop the party and roll perception.",
+            "reply": "Roll 1d20 and add your Perception modifier.",
+            "usage": {
+              "uncachedInput": 60,
+              "cachedRead": 6891,
+              "cacheWrite": 256,
+              "writeTtl": "5m",
+              "outputTokens": 16
+            },
+            "reportedCost": 0.0034473,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 4,
+            "playerAction": "I throw the lantern toward the sound to drive it back, then draw my blade. Borin, get behind me.",
+            "reply": "You haven't rolled yet. The marsh is still, the reeds are still wrong, and whatever is in there hasn't moved.\n\nRoll 1d20 and add your Perception modifier first — then we'll see what you're throwing at.",
+            "usage": {
+              "uncachedInput": 58,
+              "cachedRead": 7147,
+              "cacheWrite": 73,
+              "writeTtl": "5m",
+              "outputTokens": 55
+            },
+            "reportedCost": 0.00341685,
+            "reasoningTokens": 0
+          },
+          {
+            "turnIndex": 5,
+            "playerAction": "After the fight, I search the reeds where it nested. Anything worth carrying back to Greygull to sell?",
+            "reply": "We haven't had the fight yet — you called for a stop and I called for a Perception roll, and the lantern's still in your hand.\n\nRoll 1d20 and add your Perception modifier. Let's see what's in the reeds before anyone throws anything.",
+            "usage": {
+              "uncachedInput": 60,
+              "cachedRead": 7220,
+              "cacheWrite": 110,
+              "writeTtl": "5m",
+              "outputTokens": 63
+            },
+            "reportedCost": 0.0037035,
+            "reasoningTokens": 0
+          }
+        ]
+      }
+    }
+  }
+}

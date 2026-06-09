@@ -2,12 +2,13 @@
   "name": "prompt-cache-economics",
   "version": "0.1.0",
   "private": false,
-  "description": "Prompt caching is a KV-cache trick with real GPU economics. The same mistake — dynamic content in the cached prefix — bills you three different ways across OpenAI, Anthropic, and Gemini. A reproducible benchmark that measures it, on a toy dungeon-master agent.",
+  "description": "Prompt caching is a KV-cache trick with real GPU economics. The same mistake — a timestamp in your prompt prefix — silently wastes the discount on OpenAI and costs you 25% MORE on Anthropic. A reproducible benchmark that measures it, on a toy dungeon-master agent.",
   "license": "MIT",
   "type": "module",
   "scripts": {
     "eval": "tsx src/run.ts",
-    "tokens": "tsx src/tokens.ts"
+    "tokens": "tsx src/tokens.ts",
+    "diag": "tsx src/diag.ts"
   },
   "dependencies": {
     "dotenv": "^16.4.5"

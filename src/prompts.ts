@@ -20,9 +20,6 @@
 
 import { STATIC_PREFIX, buildDynamicSuffix, SESSION_STATE, PLAYER_TURNS, turnContext } from './domain.js';
 
-/** The full byte-stable system prompt for a session: static prefix + session-stable suffix. */
-const STABLE_SYSTEM = `${STATIC_PREFIX}\n\n${buildDynamicSuffix(SESSION_STATE)}`;
-
 export interface Msg {
   role: 'user' | 'assistant';
   content: string;
@@ -44,18 +41,20 @@ export type Variant = 'naive' | 'disciplined';
 export function buildPrompt(variant: Variant, turnIndex: number, history: Msg[]): BuiltPrompt {
   const action = PLAYER_TURNS[turnIndex] ?? '(the party waits)';
   const ctx = turnContext(turnIndex);
+  // Computed per call (not at import) so it reflects the run seed set by run.ts.
+  const stableSystem = `${STATIC_PREFIX}\n\n${buildDynamicSuffix(SESSION_STATE)}`;
 
   if (variant === 'naive') {
     // Footgun: a per-turn line pinned above the stable layers. Realistic mistake — people put
     // "the current time is ..." or session metadata at the very top of the system prompt.
-    const system = `Session info — turn ${turnIndex + 1}, ${ctx}\n\n${STABLE_SYSTEM}`;
+    const system = `Session info — turn ${turnIndex + 1}, ${ctx}\n\n${stableSystem}`;
     const userTurn: Msg = { role: 'user', content: action };
     return { system, messages: [...history, userTurn] };
   }
 
   // Disciplined: system is byte-stable (static prefix + session-stable suffix); the timestamp
   // lives in the tail wrapper on the latest user message. Past messages are frozen as sent.
-  const system = STABLE_SYSTEM;
+  const system = stableSystem;
   const userTurn: Msg = { role: 'user', content: `${ctx}\n\n${action}` };
   return { system, messages: [...history, userTurn] };
 }

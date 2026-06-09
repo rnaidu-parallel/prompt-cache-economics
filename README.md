@@ -24,17 +24,27 @@ which reports the **real billed cost** and cached-token counts per call and pass
 `cache_control` breakpoints through. Models pinned: `openai/gpt-5.4`, `anthropic/claude-sonnet-4.6`,
 `google/gemini-3-flash-preview` (reasoning disabled on all three).
 
-## The punchline: same mistake, three different bills
+## The punchline: same mistake, two different bills
 
-| Provider | Caching | Cache read | A mutating prefix costs you… |
+A timestamp at the top of your system prompt — six turns of a dungeon-master session, measured
+2026-06-09 via OpenRouter (real billed cost), reasoning disabled:
+
+| Provider | Caching | Naive (timestamp in prefix) | Disciplined (timestamp in tail) |
 |---|---|---|---|
-| **OpenAI** | automatic | 90% off | nothing saved — but never *more* (no write fee) |
-| **Anthropic** | explicit `cache_control` | 0.1× | **more than base** — you pay the 1.25–2× *write* premium every turn and collect zero reads |
-| **Gemini** | implicit + explicit | 90% off | implicit: nothing saved. explicit: **storage bleed** — billed per token-hour whether you reuse it or not |
+| **OpenAI** (`gpt-5.4`) | automatic | **+0%** — 0% cache hit, you just save nothing | **−82%** input cost, ~92% hit |
+| **Anthropic** (`claude-sonnet-4.6`) | explicit `cache_control` | **+25%** — a cache *write* every turn, 0 reads → **more than not caching at all** | **−67%** input cost, ~81% hit |
+
+That's the whole point: the *same mistake* silently wastes the discount on OpenAI, and **actively costs
+you 25% more** on Anthropic — because Anthropic charges a 1.25× premium to *write* the cache, and a
+mutating prefix re-writes it every turn while never collecting a read.
 
 The fix is one discipline, everywhere: **byte-stable static prefix, volatile content last.** Order the
 request `tools → system → messages` — most stable first — because caching is a cumulative prefix and a
 single changed token early invalidates everything after it.
+
+(Gemini was dropped from the benchmark: its implicit caching didn't surface measurable cache hits through
+OpenRouter. The mechanism — implicit reads + an explicit `CachedContent` storage cost — is real, but we
+only publish numbers this repo reproduces.)
 
 ## Why it works (the one-paragraph version)
 
@@ -66,7 +76,10 @@ per-visit API cost. Re-running is only for refreshing the data, never for viewin
 
 ## Results
 
-_Pending first run — numbers and the generated table land here, with model IDs and run date pinned._
+Latest run is committed at [`results/latest.json`](results/latest.json) (player actions, real DM replies,
+per-turn token split, and OpenRouter's real billed cost — the dataset the site replays). Headline above;
+per-turn arc in the JSON shows naive paying full price on a growing history while disciplined warms from
+a cold first turn into 80–92% cache hits. Models + pricing pinned 2026-06-09.
 
 ## Notes
 

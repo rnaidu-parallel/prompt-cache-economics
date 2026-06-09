@@ -76,8 +76,10 @@ export async function runSession(modelKey: ModelKey, variant: Variant, turns: nu
     if (data.error) throw new Error(`${model} ${variant} turn ${i}: ${JSON.stringify(data.error)}`);
 
     const u = data.usage ?? {};
-    const cachedRead = u.prompt_tokens_details?.cached_tokens ?? 0;
-    const cacheWrite = u.cache_creation_input_tokens ?? u.prompt_tokens_details?.cache_creation_tokens ?? 0;
+    const pd = u.prompt_tokens_details ?? {};
+    // OpenRouter shape: prompt_tokens_details.{cached_tokens = reads, cache_write_tokens = writes}.
+    const cachedRead = pd.cached_tokens ?? 0;
+    const cacheWrite = pd.cache_write_tokens ?? u.cache_creation_input_tokens ?? 0;
     const promptTokens = u.prompt_tokens ?? 0;
     const reply = data.choices?.[0]?.message?.content ?? '(the DM gestures for the party to continue)';
 

@@ -38,7 +38,42 @@ async function init() {
     render();
   });
   $('#btn-auto').addEventListener('click', toggleAuto);
+  $('#btn-reel').addEventListener('click', reel);
   render();
+}
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+let reeling = false;
+
+/* A ~18s one-take story for screen recording: naive arc → bill climbs → flip to disciplined →
+   bill collapses → green arc. Runs on the currently selected model. */
+async function reel() {
+  if (reeling) return;
+  reeling = true;
+  stopAuto();
+  const lock = document.querySelectorAll('.step-btn, .seg');
+  lock.forEach((b) => (b.disabled = true));
+  const go = (v) => set('variant', v);
+  const reset = () => { state.step = 0; render(); };
+
+  go('naive');
+  reset();
+  await sleep(800);
+  const n = turns().length;
+  for (let i = 0; i < n; i++) { state.step++; render(); await sleep(900); }
+  await sleep(1800); // hold the naive verdict
+
+  go('disciplined'); // same final turn → the bill snaps from +X% to −Y%
+  await sleep(2200);
+
+  reset(); // replay the session with caching on
+  await sleep(600);
+  for (let i = 0; i < n; i++) { state.step++; render(); await sleep(850); }
+  await sleep(1900); // hold the disciplined verdict
+
+  lock.forEach((b) => (b.disabled = false));
+  render();
+  reeling = false;
 }
 
 function set(key, val) {
@@ -97,7 +132,7 @@ function render() {
   renderHeadline();
 
   $('#turn-counter').textContent = shown ? `turn ${shown} / ${T.length}` : '— press send —';
-  $('#btn-step').disabled = shown >= T.length;
+  $('#btn-step').disabled = reeling || shown >= T.length;
 }
 
 function renderStack(stateClass, shown) {

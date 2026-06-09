@@ -1,5 +1,7 @@
 # prompt-cache-economics
 
+**▸ [Play with it live](https://cache.neuromancer.in)** · **[Read the writeup](https://blog.neuromancer.in/blog/prompt-cache-timestamp/)**
+
 Prompt caching is a KV-cache trick with real GPU economics behind it. Used well, it cuts your
 input bill by 80–90%. Used carelessly, it can cost you **more than not caching at all** — and the
 way it bills you depends on the provider.

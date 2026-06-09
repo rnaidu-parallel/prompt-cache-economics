@@ -8,7 +8,8 @@
   "scripts": {
     "eval": "tsx src/run.ts",
     "tokens": "tsx src/tokens.ts",
-    "diag": "tsx src/diag.ts"
+    "diag": "tsx src/diag.ts",
+    "recompute": "tsx src/recompute.ts"
   },
   "dependencies": {
     "dotenv": "^16.4.5"

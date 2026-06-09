@@ -9,10 +9,11 @@ import 'dotenv/config';
 import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { PRICING, MODELS, PRICING_PINNED_DATE, turnCost, type Rate } from './pricing.js';
+import { PRICING, MODELS, PRICING_PINNED_DATE } from './pricing.js';
 import { PLAYER_TURNS, setRunSeed } from './domain.js';
 import type { TurnResult } from './providers/types.js';
 import { runSession } from './providers/openrouter.js';
+import { buildProviderSummary } from './report.js';
 
 /** Serialize a turn for the committed replay dataset: player action + DM reply + usage + cost. */
 function serializeTurn(t: TurnResult) {
@@ -33,42 +34,6 @@ const ONLY = process.env.ONLY as keyof typeof MODELS | undefined;
 type ProviderKey = keyof typeof MODELS;
 const ALL_KEYS = Object.keys(MODELS) as ProviderKey[];
 const KEYS = ONLY ? ALL_KEYS.filter((k) => k === ONLY) : ALL_KEYS;
-
-interface Agg {
-  uncached: number;
-  cachedRead: number;
-  cacheWrite: number;
-  output: number;
-  /** Total distinct prompt (input) tokens = uncached + cachedRead + cacheWrite. */
-  promptTokens: number;
-  /** Actual input-side $ from pinned rates (what you paid for input, incl. writes). */
-  inputCost: number;
-  /** No-cache baseline: all prompt tokens at full input rate. */
-  baselineInputCost: number;
-  /** OpenRouter's reported real total cost across turns (USD). */
-  reportedCost: number;
-  /** Reasoning/thinking tokens used across turns — should be 0. */
-  reasoningTokens: number;
-}
-
-function aggregate(turns: TurnResult[], rate: Rate): Agg {
-  const a: Agg = { uncached: 0, cachedRead: 0, cacheWrite: 0, output: 0, promptTokens: 0, inputCost: 0, baselineInputCost: 0, reportedCost: 0, reasoningTokens: 0 };
-  for (const t of turns) {
-    const u = t.usage;
-    a.uncached += u.uncachedInput;
-    a.cachedRead += u.cachedRead;
-    a.cacheWrite += u.cacheWrite;
-    a.output += u.outputTokens;
-    const prompt = u.uncachedInput + u.cachedRead + u.cacheWrite;
-    a.promptTokens += prompt;
-    // input-side cost only (exclude output so the variant delta is pure cache economics)
-    a.inputCost += turnCost({ ...u, outputTokens: 0 }, rate);
-    a.baselineInputCost += (prompt * rate.input) / 1_000_000;
-    a.reportedCost += t.reportedCost ?? 0;
-    a.reasoningTokens += t.reasoningTokens ?? 0;
-  }
-  return a;
-}
 
 const pct = (x: number) => `${x >= 0 ? '+' : ''}${(x * 100).toFixed(1)}%`;
 const usd = (x: number) => `$${x.toFixed(6)}`;
@@ -97,33 +62,19 @@ async function main() {
       continue;
     }
 
-    const an = aggregate(naive, rate);
-    const ad = aggregate(disciplined, rate);
-    const baseline = an.baselineInputCost; // same prompt sizes; use naive's as the reference
-    const naiveVsBase = (an.inputCost - baseline) / baseline;
-    const discVsBase = (ad.inputCost - baseline) / baseline;
-    const discHitRate = ad.cachedRead / (ad.promptTokens || 1);
+    // Full per-turn transcripts (player action + real DM reply + usage + cost) feed the rollup;
+    // each variant is compared to ITS OWN no-cache baseline, plus a direct naive→disciplined number.
+    const summary = buildProviderSummary(MODELS[key], naive.map(serializeTurn), disciplined.map(serializeTurn), rate);
+    const { naive: an, disciplined: ad, disciplinedVsNaive } = summary;
 
     console.log(`\n■ ${key.toUpperCase()}  (${MODELS[key]})`);
-    console.log(`   no-cache baseline input cost   ${usd(baseline)}  (pinned rates)`);
-    console.log(`   NAIVE   input ${usd(an.inputCost)} (${pct(naiveVsBase)} vs base)  cachedRead=${an.cachedRead} write=${an.cacheWrite}  OR-cost ${usd(an.reportedCost)}`);
-    console.log(`   DISCIPL input ${usd(ad.inputCost)} (${pct(discVsBase)} vs base)  hitRate=${(discHitRate * 100).toFixed(1)}%  OR-cost ${usd(ad.reportedCost)}`);
-    if (an.inputCost > baseline) console.log(`   ⚠ NAIVE COSTS MORE THAN BASE — write premium paid every turn, ${an.cachedRead} reads collected`);
+    console.log(`   NAIVE   input ${usd(an.inputCost)} (${pct(an.vsBaseline)} vs its no-cache baseline)  cachedRead=${an.cachedRead} write=${an.cacheWrite}  OR ${usd(an.reportedCost)}`);
+    console.log(`   DISCIPL input ${usd(ad.inputCost)} (${pct(ad.vsBaseline)} vs its baseline · ${(disciplinedVsNaive * 100).toFixed(1)}% cheaper than naive)  hit ${(ad.hitRate * 100).toFixed(1)}%  OR ${usd(ad.reportedCost)}`);
+    if (an.inputCost > an.baselineInputCost) console.log(`   ⚠ NAIVE COSTS MORE THAN BASE — write premium paid every turn, ${an.cachedRead} reads collected`);
     const reasoning = an.reasoningTokens + ad.reasoningTokens;
     if (reasoning > 0) console.log(`   ⚠ reasoning tokens used: ${reasoning} (expected 0 — reasoning should be disabled)`);
 
-    report.providers[key] = {
-      model: MODELS[key],
-      baselineInputCost: baseline,
-      naive: { ...an, vsBaseline: naiveVsBase },
-      disciplined: { ...ad, vsBaseline: discVsBase, hitRate: discHitRate },
-      // Full per-turn transcripts (player action + real DM reply + usage + cost) so the
-      // interactive playground and the animated explainer replay real data with no backend.
-      turns: {
-        naive: naive.map(serializeTurn),
-        disciplined: disciplined.map(serializeTurn),
-      },
-    };
+    report.providers[key] = summary;
   }
 
   const __dirname = dirname(fileURLToPath(import.meta.url));

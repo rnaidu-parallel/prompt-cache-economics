@@ -10,7 +10,6 @@
   "providers": {
     "openai": {
       "model": "openai/gpt-5.4",
-      "baselineInputCost": 0.083615,
       "naive": {
         "uncached": 33446,
         "cachedRead": 0,
@@ -33,9 +32,10 @@
         "baselineInputCost": 0.08387249999999999,
         "reportedCost": 0.0286425,
         "reasoningTokens": 0,
-        "vsBaseline": -0.8235663457513603,
+        "vsBaseline": -0.8241080211034606,
         "hitRate": 0.9156755790038451
       },
+      "disciplinedVsNaive": 0.8235663457513603,
       "turns": {
         "naive": [
           {
@@ -201,7 +201,6 @@
     },
     "anthropic": {
       "model": "anthropic/claude-sonnet-4.6",
-      "baselineInputCost": 0.11940300000000001,
       "naive": {
         "uncached": 515,
         "cachedRead": 0,
@@ -224,9 +223,10 @@
         "baselineInputCost": 0.125421,
         "reportedCost": 0.052524299999999996,
         "reasoningTokens": 0,
-        "vsBaseline": -0.6677696540287934,
+        "vsBaseline": -0.683710861817399,
         "hitRate": 0.808381371540651
       },
+      "disciplinedVsNaive": 0.7335261222227821,
       "turns": {
         "naive": [
           {
@@ -402,5 +402,6 @@
         ]
       }
     }
-  }
+  },
+  "recomputedAt": "2026-06-09T05:52:49.239Z"
 }

@@ -32,7 +32,10 @@ A timestamp at the top of your system prompt — six turns of a dungeon-master s
 | Provider | Caching | Naive (timestamp in prefix) | Disciplined (timestamp in tail) |
 |---|---|---|---|
 | **OpenAI** (`gpt-5.4`) | automatic | **+0%** — 0% cache hit, you just save nothing | **−82%** input cost, ~92% hit |
-| **Anthropic** (`claude-sonnet-4.6`) | explicit `cache_control` | **+25%** — a cache *write* every turn, 0 reads → **more than not caching at all** | **−67%** input cost, ~81% hit |
+| **Anthropic** (`claude-sonnet-4.6`) | explicit `cache_control` | **+25%** — a cache *write* every turn, 0 reads → **more than not caching at all** | **−68%** input cost, ~81% hit |
+
+Each percentage is vs that variant's own no-cache baseline. Head-to-head, just moving the timestamp out of
+the prefix makes the run **82% cheaper on OpenAI and 73% cheaper on Anthropic.**
 
 That's the whole point: the *same mistake* silently wastes the discount on OpenAI, and **actively costs
 you 25% more** on Anthropic — because Anthropic charges a 1.25× premium to *write* the cache, and a

@@ -9,3 +9,6 @@ web/_shot-*.png
 # generated social assets (the mp4 is a deliverable, not source)
 media/
 web/frames/
+
+# vercel project link
+web/.vercel

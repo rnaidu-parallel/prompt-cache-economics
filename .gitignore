@@ -1,0 +1,4 @@
+node_modules/
+.env
+*.log
+# results/ is committed as evidence (token counts + costs, nothing sensitive)

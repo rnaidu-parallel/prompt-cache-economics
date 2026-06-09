@@ -19,8 +19,10 @@ the in-world time). We run the same six-turn session two ways:
   tail wrapper on the latest message. The whole prefix (`tools → system → prior turns`) is reused
   every turn.
 
-Same tokens, same task, opposite cache behavior. We hit each provider's API **directly** and read its
-**native** cache-usage fields, then convert to dollars with pinned rates.
+Same tokens, same task, opposite cache behavior. Everything routes through **OpenRouter** (one key),
+which reports the **real billed cost** and cached-token counts per call and passes Anthropic
+`cache_control` breakpoints through. Models pinned: `openai/gpt-5.4`, `anthropic/claude-sonnet-4.6`,
+`google/gemini-3-flash-preview` (reasoning disabled on all three).
 
 ## The punchline: same mistake, three different bills
 
@@ -47,12 +49,20 @@ rate even if 99% of the prompt is unchanged.
 
 ```bash
 npm install
-cp .env.example .env   # add OPENAI_API_KEY, ANTHROPIC_API_KEY, GOOGLE_GENERATIVE_AI_API_KEY
-npm run tokens         # sanity-check the static prefix clears every provider's min-cache floor
-npm run eval           # runs naive + disciplined across all three providers, writes results/
+cp .env.example .env    # add OPENROUTER_API_KEY
+npm run tokens          # sanity-check the static prefix clears every model's min-cache floor
+
+ONLY=openai TURNS=3 npm run eval   # smoke-test one model first (cheap)
+npm run eval                       # full run: 3 models × naive + disciplined, writes results/
 ```
 
-The benchmark needs all three keys for the full comparison; it skips any provider whose key is missing.
+## Run once, replay forever
+
+The eval writes every player action, every real DM reply, and every usage/cost number to
+`results/`. A full run updates `results/latest.json` — **that file is the dataset the website and the
+interactive playground replay.** You run the benchmark once (or a couple of times to warm the cache),
+commit the JSON, and the site serves real transcripts and real numbers with no backend and no
+per-visit API cost. Re-running is only for refreshing the data, never for viewing it.
 
 ## Results
 
@@ -60,10 +70,12 @@ _Pending first run — numbers and the generated table land here, with model IDs
 
 ## Notes
 
-- Pricing is pinned (see `src/pricing.ts`) and **drifts** — re-verify against each provider's pricing
-  page before trusting the dollar figures. The token counts come straight from the APIs and don't drift.
-- Min-cache floors differ: OpenAI 1,024 · Gemini 2.5 2,048 · Anthropic Haiku 4.5 4,096. The world prompt
-  is sized to clear all of them so the same prompt is cacheable everywhere.
+- Pricing is pinned and grounded against official pages on 2026-06-09 (see `src/pricing.ts`); it **drifts**,
+  and OpenRouter reports the real billed cost per call as the ground truth at run time.
+- Min-cache floors differ: gpt-5.4 1,024 · Sonnet 4.6 1,024 · Gemini 3 Flash 4,096. The world prompt is
+  sized (~5k tokens) to clear all of them so the same prompt is cacheable everywhere.
+- Reasoning is disabled on all three models (`reasoning: { enabled: false }`); the run flags any nonzero
+  reasoning tokens.
 - Caching is best-effort; a cold cache, an eviction, or routing drift can miss. Run twice to warm it.
 
 MIT.

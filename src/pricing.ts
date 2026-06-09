@@ -26,27 +26,46 @@ export interface Rate {
   output: number | null;
 }
 
-/** Pinned eval models — cheap tier per provider, all support caching. Verify IDs live at run. */
+/**
+ * Pinned eval models, as OpenRouter slugs. We route everything through OpenRouter (one key) and
+ * read its reported cost + cached-token counts. Pinned rates below are a cross-check against
+ * OpenRouter's real billed cost. Verify slugs live at run (the smoke test will catch a bad slug).
+ */
 export const MODELS = {
-  openai: 'gpt-5.4-mini',
-  anthropic: 'claude-haiku-4-5',
-  gemini: 'gemini-2.5-flash',
+  openai: 'openai/gpt-5.4',
+  anthropic: 'anthropic/claude-sonnet-4.6',
+  gemini: 'google/gemini-3-flash-preview',
 } as const;
+
+/** True when this model is an Anthropic route (needs explicit cache_control breakpoints). */
+export function isAnthropic(slug: string): boolean {
+  return slug.startsWith('anthropic/');
+}
 
 /** Min tokens a prefix must reach to be cacheable, per pinned model (2026-06-09). */
 export const MIN_CACHE_TOKENS = {
-  openai: 1024,
-  anthropic: 4096, // Haiku 4.5 — the highest floor; the world prefix must clear this.
-  gemini: 2048,
+  openai: 1024, // gpt-5.4
+  anthropic: 1024, // Sonnet 4.6
+  gemini: 4096, // Gemini 3 Flash (verify) — the highest floor; the world prefix must clear this.
 } as const;
 
+/*
+ * Rates grounded against official pages, retrieved 2026-06-09:
+ *   gpt-5.4               — OpenRouter model page (input $2.50 / output $15) + OpenAI pricing
+ *                           (cached $0.25 = 90% off, no write cost).
+ *   claude-sonnet-4.6     — platform.claude.com/.../about-claude/pricing: base $3, 5m write $3.75,
+ *                           1h write $6, cache read $0.30, output $15.
+ *   gemini-3-flash-preview — ai.google.dev/gemini-api/docs/pricing: input $0.50, output $3.00,
+ *                           cache read $0.05, cache storage $1.00 / MTok / hour.
+ * OpenRouter also reports the real billed cost per call, which is the ground truth at run.
+ */
 export const PRICING: Record<keyof typeof MODELS, Rate> = {
-  // gpt-5.4-mini: automatic caching, 90% read discount, NO write cost.
-  openai: { input: 0.75, cachedRead: 0.075, output: 4.5 },
-  // claude-haiku-4-5: read 0.1x, 5m write 1.25x, 1h write 2x.
-  anthropic: { input: 1.0, cachedRead: 0.1, write5m: 1.25, write1h: 2.0, output: 5.0 },
-  // gemini-2.5-flash: read 0.1x, implicit has no storage cost; explicit storage $1/MTok-hr.
-  gemini: { input: 0.3, cachedRead: 0.03, storagePerMTokHour: 1.0, output: null /* verify */ },
+  // gpt-5.4: automatic caching, 90% read discount, NO write cost.
+  openai: { input: 2.5, cachedRead: 0.25, output: 15 },
+  // claude-sonnet-4.6: read 0.1x, 5m write 1.25x, 1h write 2x.
+  anthropic: { input: 3.0, cachedRead: 0.3, write5m: 3.75, write1h: 6.0, output: 15 },
+  // gemini-3-flash-preview: read 0.1x, implicit (no storage cost); explicit storage $1/MTok-hr.
+  gemini: { input: 0.5, cachedRead: 0.05, storagePerMTokHour: 1.0, output: 3.0 },
 };
 
 /** Per-turn token usage, normalized across providers. */

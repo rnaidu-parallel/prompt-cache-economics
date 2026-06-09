@@ -6,10 +6,8 @@ export interface TurnResult {
   usage: TurnUsage;
   /** The model's reply text, threaded back into history for the next turn. */
   reply: string;
+  /** OpenRouter's reported real billed cost for this call (USD), if available. */
+  reportedCost?: number;
+  /** Reasoning/thinking tokens the model used this turn — should be 0 (reasoning disabled). */
+  reasoningTokens?: number;
 }
-
-export type RunSession = (variant: Variant, turns: number) => Promise<TurnResult[]>;
-
-/** Force narration (no tool calls) so history stays clean text, while tool defs still sit in
- *  the cacheable prefix. Each provider maps this to its own tool_choice = none. */
-export const FORCE_NO_TOOLS = true;

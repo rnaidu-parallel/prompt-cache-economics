@@ -96,6 +96,12 @@ async function main() {
       baselineInputCost: baseline,
       naive: { ...an, vsBaseline: naiveVsBase },
       disciplined: { ...ad, vsBaseline: discVsBase, hitRate: discHitRate },
+      // Full per-turn transcripts (real DM replies + usage) so the interactive playground and
+      // the animated explainer can replay real data with no backend.
+      turns: {
+        naive: naive.map((t) => ({ turnIndex: t.turnIndex, reply: t.reply, usage: t.usage })),
+        disciplined: disciplined.map((t) => ({ turnIndex: t.turnIndex, reply: t.reply, usage: t.usage })),
+      },
     };
   }
 

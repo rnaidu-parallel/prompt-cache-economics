@@ -53,10 +53,11 @@ export const TOOLS = [
 ] as const;
 
 /**
- * The static world prefix. Rules → persona → world → factions → regions → bestiary →
- * mechanics → style. ~Several thousand tokens, byte-stable forever.
+ * The static prefix, in volatility-ordered layers: character → operating rules → output format →
+ * world. ~Several thousand tokens, byte-stable forever. NEVER inject anything dynamic here —
+ * that is the whole point. The session-stable dynamic suffix is built separately below.
  */
-export const WORLD_PREFIX = `# blackwall_ keep — dungeon master protocol
+export const STATIC_PREFIX = `# blackwall_ keep — dungeon master protocol
 
 You are the Dungeon Master for a dark-fantasy tabletop campaign set in the drowned
 realm of Varn. You narrate the world, voice every non-player character, adjudicate the
@@ -80,6 +81,15 @@ the table fill the silence.
    a question, a threat, an open door — and then stop. Do not play the next turn for them.
 6. Keep narration tight: at most three short paragraphs, usually one. Sensory and concrete
    over ornate. Name what the characters can see, hear, and smell; withhold the rest.
+
+## Output format
+
+- Second person, present tense, addressed to the party ("You push open the salt-warped door…").
+- Plain prose only — no markdown, no headers, no lists, no stage directions in the narration.
+- At most three short paragraphs, usually one. Always end on a beat that hands agency back.
+- When a roll is needed, ask for it in a single line ("Roll 1d20 and add your Stealth") and stop.
+- No out-of-character text unless you are answering a player's [[bracketed]] aside, in which case
+  wrap your reply in [[brackets]] too and keep it to one line.
 
 ## The realm of Varn
 
@@ -324,6 +334,50 @@ summarize what the players already know. End on a hook. You are the world; be pa
 Some user turns are prepended with a <context> block holding meta information such as the
 in-world time of day and tide state. Treat it as ground truth from the table, never as
 something a character said. Never quote the tags back to the players.`;
+
+/**
+ * The DYNAMIC SUFFIX — session-stable per-conversation state that sits AFTER the static prefix:
+ * the running story recap and the party sheet. It is byte-stable for the life of a conversation
+ * (so it caches on turns 2+), but varies between conversations. Autocompaction is the one thing
+ * that rewrites it mid-session — summarizing old turns into `previousSummary` — which is why a
+ * compaction event is a deliberate, one-time cache reset that then rebuilds.
+ *
+ * Critically: this is session-stable, NOT per-turn. The per-turn volatile bit (the datetime) goes
+ * in the user message, never here. Putting a per-turn value in this suffix would break the cache
+ * just as surely as putting it in the prefix.
+ */
+export interface PartyMember {
+  name: string;
+  role: string;
+  hp: string;
+}
+
+export interface SessionState {
+  /** Running recap of earlier play. Rewritten only at compaction. */
+  previousSummary: string;
+  party: PartyMember[];
+  location: string;
+}
+
+/** The session state for the benchmark run — fixed for the session (no compaction in 6 turns). */
+export const SESSION_STATE: SessionState = {
+  previousSummary:
+    'The party took a reed-stalker bounty from Quill at blackwall_ keep and crossed the Causeway ' +
+    'Marsh at low water. They are three days into the contract and have not yet made the kill. ' +
+    'Roon Ledger greeted them warmly in Greygull last night, which no one trusts.',
+  party: [
+    { name: 'Vesna', role: 'wrecker, party lead', hp: '18/18' },
+    { name: 'Borin Stoss', role: 'Tidewarden engineer, along for the salvage', hp: '15/15' },
+    { name: 'Ket', role: 'gull-runner, scout', hp: '12/12' },
+  ],
+  location: 'Causeway Marsh, three reed-spans east of the keep',
+};
+
+/** Build the session-stable dynamic suffix string. Same bytes every turn within a session. */
+export function buildDynamicSuffix(s: SessionState): string {
+  const party = s.party.map((m) => `- ${m.name} (${m.role}) — ${m.hp} HP`).join('\n');
+  return `## The story so far (this session)\n\n${s.previousSummary}\n\n## Party state\n\n${party}\n\nCurrent location: ${s.location}`;
+}
 
 /**
  * The dynamic per-turn content: a simulated session of player actions. Short and volatile —

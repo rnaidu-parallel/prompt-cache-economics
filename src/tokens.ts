@@ -5,16 +5,17 @@
  *
  *   `npm run tokens`
  */
-import { WORLD_PREFIX, TOOLS, PLAYER_TURNS } from './domain.js';
+import { STATIC_PREFIX, buildDynamicSuffix, SESSION_STATE, TOOLS, PLAYER_TURNS } from './domain.js';
 import { MIN_CACHE_TOKENS } from './pricing.js';
 
-const chars = WORLD_PREFIX.length;
-const words = WORLD_PREFIX.trim().split(/\s+/).length;
+const fullSystem = `${STATIC_PREFIX}\n\n${buildDynamicSuffix(SESSION_STATE)}`;
+const chars = fullSystem.length;
+const words = fullSystem.trim().split(/\s+/).length;
 const estTokens = Math.round(chars / 4);
 const toolsChars = JSON.stringify(TOOLS).length;
 const estToolTokens = Math.round(toolsChars / 4);
 
-console.log(`\nworld prefix:  ${chars} chars  ~${words} words  ~${estTokens} tokens (chars/4 estimate)`);
+console.log(`\nstatic system (prefix + session suffix):  ${chars} chars  ~${words} words  ~${estTokens} tokens (chars/4 estimate)`);
 console.log(`tools:         ${toolsChars} chars  ~${estToolTokens} tokens`);
 console.log(`avg player turn: ~${Math.round(PLAYER_TURNS.join(' ').length / PLAYER_TURNS.length / 4)} tokens\n`);
 

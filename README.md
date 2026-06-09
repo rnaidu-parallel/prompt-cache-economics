@@ -69,6 +69,19 @@ ONLY=openai TURNS=3 npm run eval   # smoke-test one model first (cheap)
 npm run eval                       # full run: 3 models × naive + disciplined, writes results/
 ```
 
+## Interactive demo (`web/`)
+
+`web/` is a static, no-backend replay of the committed dataset — play the dungeon-master session, flip the
+timestamp between the prefix and the tail, switch providers, and watch the prompt stack go green/red and the
+bill move in real time. It reads `web/data.json` (a copy of `results/latest.json`).
+
+```bash
+npm run sync:web                      # refresh web/data.json from the latest eval
+npx serve web    # or: (cd web && python3 -m http.server)
+```
+
+It deploys as a plain static site and embeds in a blog post via an iframe. No keys, no API calls, no cost.
+
 ## Run once, replay forever
 
 The eval writes every player action, every real DM reply, and every usage/cost number to

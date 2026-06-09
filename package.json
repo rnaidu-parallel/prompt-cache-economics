@@ -9,7 +9,8 @@
     "eval": "tsx src/run.ts",
     "tokens": "tsx src/tokens.ts",
     "diag": "tsx src/diag.ts",
-    "recompute": "tsx src/recompute.ts"
+    "recompute": "tsx src/recompute.ts",
+    "sync:web": "node -e \"require('fs').copyFileSync('results/latest.json','web/data.json')\""
   },
   "dependencies": {
     "dotenv": "^16.4.5"

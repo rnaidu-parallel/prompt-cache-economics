@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>prompt cache economics — a timestamp in your prompt</title>
+    <meta
+      name="description"
+      content="The same mistake — a timestamp in your prompt prefix — silently wastes the cache discount on OpenAI and costs you more on Anthropic. An interactive, replayed benchmark."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="crt" aria-hidden="true"></div>
+
+    <header class="top">
+      <div class="brand"><span class="word">blackwall_</span><span class="sep">/</span>prompt cache economics</div>
+      <div class="run-meta" id="run-meta">replaying a recorded run</div>
+    </header>
+
+    <p class="lede">
+      A dungeon-master agent: a big, byte-stable system prompt and a tiny, changing thing each turn — the
+      time. Watch what happens to your bill depending on <em>where</em> that timestamp goes.
+    </p>
+
+    <section class="controls" aria-label="controls">
+      <div class="ctl-group" role="tablist" aria-label="provider">
+        <span class="ctl-label">model</span>
+        <button class="seg" data-provider="openai" aria-selected="true">OpenAI · gpt-5.4</button>
+        <button class="seg" data-provider="anthropic">Anthropic · sonnet-4.6</button>
+      </div>
+      <div class="ctl-group" role="tablist" aria-label="prompt discipline">
+        <span class="ctl-label">timestamp goes</span>
+        <button class="seg danger" data-variant="naive" aria-selected="true">⏱ in the prefix (naive)</button>
+        <button class="seg good" data-variant="disciplined">⏱ in the tail (disciplined)</button>
+      </div>
+    </section>
+
+    <main class="grid">
+      <!-- LEFT: the prompt stack -->
+      <section class="panel stack-panel" aria-label="prompt structure">
+        <h2>the prompt, one request</h2>
+        <div class="stack" id="stack"></div>
+        <div class="boundary-note" id="boundary-note"></div>
+      </section>
+
+      <!-- RIGHT: the session + meters -->
+      <section class="panel session-panel">
+        <h2>the session <span class="turn-counter" id="turn-counter"></span></h2>
+        <div class="transcript" id="transcript"></div>
+        <div class="stepper">
+          <button id="btn-step" class="step-btn">▶ send next turn</button>
+          <button id="btn-auto" class="step-btn ghost">auto-play</button>
+          <button id="btn-reset" class="step-btn ghost">reset</button>
+        </div>
+
+        <div class="meters">
+          <div class="meter-row">
+            <span class="meter-label">this turn</span>
+            <div class="tokbar" id="tokbar"><span class="legend" id="tokbar-legend"></span></div>
+          </div>
+          <div class="bill">
+            <div class="bill-col">
+              <span class="bill-k">running bill (input)</span>
+              <span class="bill-v" id="bill-actual">$0.000000</span>
+            </div>
+            <div class="bill-col">
+              <span class="bill-k">if you never cached</span>
+              <span class="bill-v muted" id="bill-baseline">$0.000000</span>
+            </div>
+            <div class="bill-col">
+              <span class="bill-k" id="verdict-k">vs no-cache</span>
+              <span class="bill-v" id="verdict-v">—</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="headline" id="headline"></footer>
+
+    <p class="foot-note">
+      Real calls through OpenRouter, reasoning disabled, billed cost recorded and replayed here — no live API,
+      nothing to spend. Reproduce it yourself:
+      <a href="https://github.com/rnaidu-parallel/prompt-cache-economics">prompt-cache-economics</a>.
+    </p>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

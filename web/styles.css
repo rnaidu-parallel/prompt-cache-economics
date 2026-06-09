@@ -93,6 +93,13 @@ a:hover { color: #ff5e7f; }
 .panel h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--dim); margin: 0 0 14px; font-weight: 500; }
 .turn-counter { color: var(--green-bright); margin-left: 8px; letter-spacing: 0; text-transform: none; }
 
+/* colour key */
+.legend-key { display: flex; gap: 16px; flex-wrap: wrap; font-size: 11px; color: var(--dim); margin: -4px 0 14px; }
+.legend-key .sw { display: inline-block; width: 10px; height: 10px; border: 1px solid; margin-right: 5px; vertical-align: middle; }
+.legend-key .sw-cached { background: rgba(47, 158, 84, 0.22); border-color: var(--green); }
+.legend-key .sw-write { background: rgba(200, 146, 42, 0.22); border-color: var(--amber); }
+.legend-key .sw-miss { background: rgba(168, 23, 58, 0.22); border-color: var(--red); }
+
 /* prompt stack */
 .stack { display: flex; flex-direction: column; gap: 4px; }
 .layer {

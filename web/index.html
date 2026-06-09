@@ -40,6 +40,11 @@
       <!-- LEFT: the prompt stack -->
       <section class="panel stack-panel" aria-label="prompt structure">
         <h2>the prompt, one request</h2>
+        <div class="legend-key" aria-label="colour key">
+          <span><i class="sw sw-cached"></i> cached read · ~10% price</span>
+          <span><i class="sw sw-write"></i> cache write · 1.25× premium (Anthropic)</span>
+          <span><i class="sw sw-miss"></i> full price · recomputed</span>
+        </div>
         <div class="stack" id="stack"></div>
         <div class="boundary-note" id="boundary-note"></div>
       </section>
